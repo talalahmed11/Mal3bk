@@ -5,22 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.7" />
   <title>Book a Field - MLAAB CITY</title>
   <link rel="stylesheet" href="padel.css" />
+</head>
+<body>
+    <div class="announcement-bar" id="announcement">
+    <div class="announcement-content">
+       🎾Book your padel court in seconds, only here🎾 
+    </div>
+      </div>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
-      margin: 0px;
-      padding-top: 0px;
+      margin: 0;
+      padding-top: 0;
       max-width: 100%;
       overflow-x: hidden;
     }
     .form-container {
       background-color: white;
       padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
       width: 500px;
-      max-width: 500px;
+      max-width: 95%;
       margin: 50px auto 20px;
       text-align: left;
     }
@@ -54,6 +61,7 @@
       color: white;
       border: none;
       cursor: pointer;
+      border-radius: 8px;
     }
     button:hover {
       background-color: #27ae60;
@@ -67,11 +75,114 @@
       box-sizing: border-box;
       appearance: none;
     }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .modal {
+      background: #fff;
+      width: 420px;
+      max-width: 100%;
+      border-radius: 18px;
+      padding: 28px 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      text-align: center;
+      transform: scale(0.9);
+      opacity: 0;
+      transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+    }
+    .modal.show {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .success-circle {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      position: relative;
+      background: linear-gradient(135deg,#2ecc71,#27ae60);
+      box-shadow: 0 8px 20px rgba(39,174,96,0.25);
+      animation: popIn 450ms cubic-bezier(.2,.9,.2,1);
+    }
+
+    .checkmark {
+      width: 56px;
+      height: 56px;
+    }
+    .checkmark circle {
+      fill: none;
+      stroke: rgba(255,255,255,0.22);
+      stroke-width: 6;
+    }
+    .checkmark .tick {
+      fill: none;
+      stroke: white;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+      animation: dash 600ms ease forwards 200ms;
+    }
+
+    @keyframes dash {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(.6); opacity: 0; }
+      70% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal h3 {
+      margin: 6px 0 6px;
+      font-size: 20px;
+    }
+    .modal p {
+      margin: 0 0 16px;
+      color: #555;
+    }
+    .modal .booking-code {
+      display: inline-block;
+      background: #f6f9f7;
+      padding: 8px 14px;
+      border-radius: 12px;
+      border: 1px dashed #d6eadd;
+      margin-bottom: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .modal .ok-btn {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: #3498db;
+      color: white;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .modal .ok-btn:hover {
+      filter: brightness(.95);
+    }
+
     @media (max-width: 520px) {
-      .date-input {
-        padding: 9px 12px;
-        font-size: 14px;
-      }
+      .date-input { padding: 9px 12px; font-size: 14px; }
+      .modal { padding: 20px; border-radius: 14px; }
+      .success-circle { width: 84px; height: 84px; }
     }
   </style>
 </head>
@@ -87,7 +198,6 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="index3.html">Matches</a></li>
         <li><a href="index4.html">Tournaments</a></li>
-        <li><a href="index2.html">Contact</a></li>
       </ul>
     </nav>
   </header>
@@ -108,8 +218,8 @@
         <input type="text" id="phone" placeholder="your number" required />
       </div>
       <div class="form-group">
-        <label for="date">Select a date</label>
-        <input type="date" id="date" name="date" required class="date-input" min="" />
+        <label for="date">Booking date</label>
+        <input type="date" id="date" placeholder="Booking date" required />
       </div>
       <div class="form-group">
         <label>Select Time</label>
@@ -145,6 +255,38 @@
     </form>
   </div>
 
+<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true">
+  <div id="successModal" class="modal" role="document" aria-modal="true">
+    <div class="success-circle" aria-hidden="true">
+      <svg class="checkmark" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="26" cy="26" r="20"></circle>
+        <path class="tick" fill="none" d="M14 27 l8 8 l16 -16"></path>
+      </svg>
+    </div>
+    <h3>Successful booking!</h3>
+    <p>Your booking was created successfully.</p>
+    <p>⚠ You must take a screenshot to enter the reservation ⚠</p>
+    <div id="bookingCode" class="booking-code">CODE</div>
+    <br />
+    <button id="okBtn" class="ok-btn" type="button">OK</button>
+    <button id="screenshotBtn" class="ok-btn" type="button">📸 Screenshot</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  document.getElementById("screenshotBtn").addEventListener("click", () => {
+    const modal = document.getElementById("successModal");
+    html2canvas(modal).then(canvas => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "booking_screenshot.png";
+      link.click();
+    });
+  });
+</script>
+
+
   <script>
     (function () {
       const input = document.getElementById("date");
@@ -156,11 +298,12 @@
     })();
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import emailjs from "https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
@@ -176,7 +319,7 @@
     getAnalytics(app);
     const db = getFirestore(app);
 
-    const SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbxEIOBznnXxg2Ol5nUQiM4ny2xhJnpMzadnT9l5I1QoEnH_5scAOS5rxS_A-OviKtfS6Q/exec";
+    emailjs.init("TX8-siv12PBErzriy");
 
     function generateCode(length = 6) {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -185,9 +328,41 @@
       ).join("");
     }
 
-    emailjs.init("TX8-siv12PBErzriy");
+    const bookingForm = document.getElementById("bookingForm");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const successModal = document.getElementById("successModal");
+    const bookingCodeEl = document.getElementById("bookingCode");
+    const okBtn = document.getElementById("okBtn");
 
-    document.getElementById("bookingForm").addEventListener("submit", async (e) => {
+    function showModal(code) {
+      bookingCodeEl.textContent = code;
+      modalBackdrop.style.display = "flex";
+      requestAnimationFrame(() => {
+        successModal.classList.add("show");
+        modalBackdrop.setAttribute("aria-hidden", "false");
+      });
+    }
+
+    function hideModal() {
+      successModal.classList.remove("show");
+      modalBackdrop.setAttribute("aria-hidden", "true");
+      setTimeout(() => {
+        modalBackdrop.style.display = "none";
+      }, 260);
+    }
+
+    okBtn.addEventListener("click", () => {
+      hideModal();
+      bookingForm.reset();
+    });
+
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) {
+        hideModal();
+      }
+    });
+
+    bookingForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const name = document.getElementById("name").value.trim();
@@ -223,8 +398,22 @@
           createdAt: serverTimestamp(),
         });
 
-        alert(`Booking successful! Your booking code is: ${code}`);
-        e.target.reset();
+        showModal(code);
+
+        try {
+          emailjs.send("service_d75wk4a", "template_fo5wwpn", {
+            to_name: name,
+            to_email: email,
+            phone: phone,
+            booking_date: date,
+            booking_from: from + " " + am_pm,
+            booking_to: to + " " + am_pm,
+            booking_code: code
+          });
+        } catch (emailErr) {
+          console.warn("EmailJS send failed:", emailErr);
+        }
+
       } catch (err) {
         console.error("Error during booking:", err);
         alert("Something went wrong. Please try again.");
