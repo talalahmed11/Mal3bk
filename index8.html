@@ -301,10 +301,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
 
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { 
+      getFirestore, collection, addDoc, serverTimestamp, 
+      getDocs, query, orderBy, limit 
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
@@ -328,7 +331,7 @@
         chars[Math.floor(Math.random() * chars.length)]
       ).join("");
     }
-
+    
     const bookingForm = document.getElementById("bookingForm");
     const modalBackdrop = document.getElementById("modalBackdrop");
     const successModal = document.getElementById("successModal");
@@ -386,7 +389,17 @@
       }
 
       try {
+        // جلب آخر orderNumber
+        const q = query(collection(db, "bookings"), orderBy("orderNumber", "desc"), limit(1));
+        const querySnapshot = await getDocs(q);
+        let newOrderNumber = 1;
+        if (!querySnapshot.empty) {
+          const lastDoc = querySnapshot.docs[0];
+          newOrderNumber = (lastDoc.data().orderNumber || 0) + 1;
+        }
+
         await addDoc(collection(db, "bookings"), {
+          orderNumber: newOrderNumber,
           name,
           email,
           phone,
@@ -409,7 +422,8 @@
             booking_date: date,
             booking_from: from + " " + am_pm,
             booking_to: to + " " + am_pm,
-            booking_code: code
+            booking_code: code,
+            booking_number: newOrderNumber
           });
         } catch (emailErr) {
           console.warn("EmailJS send failed:", emailErr);
@@ -420,6 +434,6 @@
         alert("Something went wrong. Please try again.");
       }
     });
-  </script>
+</script>
 </body>
 </html>
