@@ -243,7 +243,7 @@
             <option value="11">11</option><option value="12">12</option>
           </select>
           <select id="am_pm" required>
-            <option value="AM/PM">AM/PM</option>
+            <option value="">AM/PM</option>
             <option value="AM">AM</option>
             <option value="PM">PM</option>
           </select>
@@ -301,139 +301,214 @@
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
 
+<div id="conflictBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true" style="display:none">
+  <div id="conflictModal" class="modal" role="document" aria-modal="true">
+    <div class="success-circle" style="background: linear-gradient(135deg,#e74c3c,#c0392b); box-shadow: 0 8px 20px rgba(192,57,43,0.2);">
+      <svg class="checkmark" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="26" cy="26" r="20" stroke="rgba(255,255,255,0.18)" stroke-width="6" fill="none"></circle>
+        <path class="cross" fill="none" d="M16 16 L36 36 M36 16 L16 36" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="80" stroke-dashoffset="80"></path>
+      </svg>
+    </div>
+    <h3>Time slot already booked</h3>
+    <p>Sorry — that time overlaps with another booking. Please choose another slot.</p>
+    <button id="conflictOk" class="ok-btn" type="button">OK</button>
+  </div>
+</div>
+
+<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true" style="display:none">
+  <div id="successModal" class="modal" role="document" aria-modal="true">
+    <div class="success-circle">
+      <svg class="checkmark" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="26" cy="26" r="20" stroke="rgba(255,255,255,0.18)" stroke-width="6" fill="none"></circle>
+        <path class="check" fill="none" d="M14 27 L22 35 L38 17" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <h3>Booking Confirmed</h3>
+    <p>Your booking code is <strong id="bookingCode"></strong></p>
+    <button id="okBtn" class="ok-btn" type="button">OK</button>
+  </div>
+</div>
+
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-    import { 
-      getFirestore, collection, addDoc, serverTimestamp, 
-      getDocs, query, orderBy, limit 
-    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+  import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
-      authDomain: "mlaab-city.firebaseapp.com",
-      projectId: "mlaab-city",
-      storageBucket: "mlaab-city.appspot.com",
-      messagingSenderId: "910383180422",
-      appId: "1:910383180422:web:3feb8fad61d2cab5917f07",
-      measurementId: "G-YQ0016JLVH",
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
+    authDomain: "mlaab-city.firebaseapp.com",
+    projectId: "mlaab-city",
+    storageBucket: "mlaab-city.appspot.com",
+    messagingSenderId: "910383180422",
+    appId: "1:910383180422:web:3feb8fad61d2cab5917f07",
+    measurementId: "G-YQ0016JLVH",
+  };
 
-    const app = initializeApp(firebaseConfig);
-    getAnalytics(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  getAnalytics(app);
+  const db = getFirestore(app);
 
-    emailjs.init("TX8-siv12PBErzriy");
+  emailjs.init("TX8-siv12PBErzriy");
 
-    function generateCode(length = 6) {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      return Array.from({ length }, () =>
-        chars[Math.floor(Math.random() * chars.length)]
-      ).join("");
+  function generateCode(length = 6) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    return Array.from({ length }, () =>
+      chars[Math.floor(Math.random() * chars.length)]
+    ).join("");
+  }
+
+  const bookingForm = document.getElementById("bookingForm");
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const successModal = document.getElementById("successModal");
+  const bookingCodeEl = document.getElementById("bookingCode");
+  const okBtn = document.getElementById("okBtn");
+
+  const conflictBackdrop = document.getElementById("conflictBackdrop");
+  const conflictModal = document.getElementById("conflictModal");
+  const conflictOk = document.getElementById("conflictOk");
+  const conflictCrossPath = conflictModal?.querySelector(".cross");
+
+  function animateCross() {
+    if (conflictCrossPath) {
+      conflictCrossPath.style.transition = "stroke-dashoffset 450ms ease 150ms";
+      conflictCrossPath.style.strokeDashoffset = "0";
     }
-    
-    const bookingForm = document.getElementById("bookingForm");
-    const modalBackdrop = document.getElementById("modalBackdrop");
-    const successModal = document.getElementById("successModal");
-    const bookingCodeEl = document.getElementById("bookingCode");
-    const okBtn = document.getElementById("okBtn");
+  }
 
-    function showModal(code) {
-      bookingCodeEl.textContent = code;
-      modalBackdrop.style.display = "flex";
-      requestAnimationFrame(() => {
-        successModal.classList.add("show");
-        modalBackdrop.setAttribute("aria-hidden", "false");
+  function showModal(code) {
+    bookingCodeEl.textContent = code;
+    modalBackdrop.style.display = "flex";
+    requestAnimationFrame(() => {
+      successModal.classList.add("show");
+      modalBackdrop.setAttribute("aria-hidden", "false");
+    });
+  }
+
+  function hideModal() {
+    successModal.classList.remove("show");
+    modalBackdrop.setAttribute("aria-hidden", "true");
+    setTimeout(() => {
+      modalBackdrop.style.display = "none";
+    }, 260);
+  }
+
+  function showConflictModal() {
+    conflictBackdrop.style.display = "flex";
+    requestAnimationFrame(() => {
+      conflictModal.classList.add("show");
+      conflictBackdrop.setAttribute("aria-hidden", "false");
+      if (conflictCrossPath) {
+        conflictCrossPath.style.strokeDashoffset = "80";
+      }
+      animateCross();
+    });
+  }
+
+  function hideConflictModal() {
+    conflictModal.classList.remove("show");
+    conflictBackdrop.setAttribute("aria-hidden", "true");
+    setTimeout(() => {
+      conflictBackdrop.style.display = "none";
+    }, 260);
+  }
+
+  okBtn.addEventListener("click", () => {
+    hideModal();
+    bookingForm.reset();
+  });
+
+  conflictOk.addEventListener("click", () => {
+    hideConflictModal();
+  });
+
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) hideModal();
+  });
+  conflictBackdrop.addEventListener("click", (e) => {
+    if (e.target === conflictBackdrop) hideConflictModal();
+  });
+
+  bookingForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const date = document.getElementById("date").value;
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const am_pm = document.getElementById("am_pm").value;
+    const code = generateCode();
+
+    if (!name || !email || !phone || !date || !from || !to || !am_pm) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    if (parseInt(to) <= parseInt(from)) {
+      alert("End time must be greater than start time.");
+      return;
+    }
+
+    try {
+      const bookingsRef = collection(db, "bookings");
+      const q = query(
+        bookingsRef,
+        where("date", "==", date),
+        where("am_pm", "==", am_pm),
+        where("expired", "==", false)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      let conflict = false;
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (
+          parseInt(from) < parseInt(data.to) &&
+          parseInt(to) > parseInt(data.from)
+        ) {
+          conflict = true;
+        }
       });
-    }
 
-    function hideModal() {
-      successModal.classList.remove("show");
-      modalBackdrop.setAttribute("aria-hidden", "true");
-      setTimeout(() => {
-        modalBackdrop.style.display = "none";
-      }, 260);
-    }
-
-    okBtn.addEventListener("click", () => {
-      hideModal();
-      bookingForm.reset();
-    });
-
-    modalBackdrop.addEventListener("click", (e) => {
-      if (e.target === modalBackdrop) {
-        hideModal();
-      }
-    });
-
-    bookingForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const date = document.getElementById("date").value;
-      const from = document.getElementById("from").value;
-      const to = document.getElementById("to").value;
-      const am_pm = document.getElementById("am_pm").value;
-      const code = generateCode();
-
-      if (!name || !email || !phone || !date || !from || !to || !am_pm) {
-        alert("Please fill in all fields.");
+      if (conflict) {
+        showConflictModal();
         return;
       }
 
-      if (parseInt(to) <= parseInt(from)) {
-        alert("End time must be greater than start time.");
-        return;
-      }
+      await addDoc(bookingsRef, {
+        name,
+        email,
+        phone,
+        date,
+        from,
+        to,
+        am_pm,
+        code,
+        expired: false,
+        createdAt: serverTimestamp(),
+      });
+
+      showModal(code);
 
       try {
-        // جلب آخر orderNumber
-        const q = query(collection(db, "bookings"), orderBy("orderNumber", "desc"), limit(1));
-        const querySnapshot = await getDocs(q);
-        let newOrderNumber = 1;
-        if (!querySnapshot.empty) {
-          const lastDoc = querySnapshot.docs[0];
-          newOrderNumber = (lastDoc.data().orderNumber || 0) + 1;
-        }
-
-        await addDoc(collection(db, "bookings"), {
-          orderNumber: newOrderNumber,
-          name,
-          email,
-          phone,
-          date,
-          from,
-          to,
-          am_pm,
-          code,
-          expired: false,
-          createdAt: serverTimestamp(),
+        emailjs.send("service_d75wk4a", "template_fo5wwpn", {
+          to_name: name,
+          to_email: email,
+          phone: phone,
+          booking_date: date,
+          booking_from: from + " " + am_pm,
+          booking_to: to + " " + am_pm,
+          booking_code: code
         });
-
-        showModal(code);
-
-        try {
-          emailjs.send("service_d75wk4a", "template_fo5wwpn", {
-            to_name: name,
-            to_email: email,
-            phone: phone,
-            booking_date: date,
-            booking_from: from + " " + am_pm,
-            booking_to: to + " " + am_pm,
-            booking_code: code,
-            booking_number: newOrderNumber
-          });
-        } catch (emailErr) {
-          console.warn("EmailJS send failed:", emailErr);
-        }
-
-      } catch (err) {
-        console.error("Error during booking:", err);
-        alert("Something went wrong. Please try again.");
+      } catch (emailErr) {
+        console.warn("EmailJS send failed:", emailErr);
       }
-    });
+
+    } catch (err) {
+      console.error("Error during booking:", err);
+      alert("Something went wrong. Please try again.");
+    }
+  });
 </script>
-</body>
-</html>
