@@ -457,6 +457,7 @@
         where("date", "==", date),
         where("am_pm", "==", am_pm),
         where("expired", "==", false),
+        orderBy('createdAt', descending, true)
       );
 
       const querySnapshot = await getDocs(q);
