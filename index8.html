@@ -456,7 +456,8 @@
         bookingsRef,
         where("date", "==", date),
         where("am_pm", "==", am_pm),
-        where("expired", "==", false)
+        where("expired", "==", false),
+        orderBy("from")
       );
 
       const querySnapshot = await getDocs(q);
@@ -512,3 +513,5 @@
     }
   });
 </script>
+</body>
+</html>
