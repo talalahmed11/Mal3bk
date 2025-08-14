@@ -40,6 +40,7 @@ width: 100;
   list-style: none;
   display: flex;
   gap: 20px;
+  align-items: center;
 }
 
 .navbar ul li a {
@@ -84,8 +85,8 @@ section{
   color: #fff;
 }
 .btn{
-  color: white;
-  background-color: #0077b6;
+  color: #fff;
+  background-color: #0078be;
   text-decoration: none;
   font-size: 1.1em;
   font-weight: 600;
