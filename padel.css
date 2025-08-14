@@ -58,6 +58,11 @@ width: 100;
   justify-content: center;
   
 }
+.booked {
+  background-color: #ffb3b3;
+  color: #a00;
+  font-weight: bold;
+}
 .Home{
   min-height: 125vh;
   display: flex;
