@@ -568,3 +568,23 @@
     }
   });
 </script>
+</body><script>
+  const fromSelect = document.getElementById("from");
+  const toSelect = document.getElementById("to");
+  const ampmSelect = document.getElementById("am_pm");
+
+  fromSelect.disabled = true;
+  toSelect.disabled = true;
+
+  ampmSelect.addEventListener("change", () => {
+    if (ampmSelect.value) {
+      fromSelect.disabled = false;
+      toSelect.disabled = false;
+    } else {
+      fromSelect.disabled = true;
+      toSelect.disabled = true;
+      fromSelect.value = "";
+      toSelect.value = "";
+    }
+  });
+</script></body></html>
