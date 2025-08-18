@@ -440,7 +440,7 @@
   }
 }
 
-  async function markBookedTimes() {
+async function markBookedTimes() {
   const date = document.getElementById("date").value;
   const am_pm = document.getElementById("am_pm").value;
 
@@ -456,30 +456,35 @@
   );
   const snap = await getDocs(q);
 
-  const bookedHours = new Set();
+  const fromSelect = document.getElementById("from");
+  const toSelect = document.getElementById("to");
 
   snap.forEach(doc => {
     const d = doc.data();
     const start = parseInt(d.from, 10);
     const end = parseInt(d.to, 10);
-    for (let h = start; h < end; h++) {
-      bookedHours.add(h);
-    }
-  });
 
-  const selects = [document.getElementById("from"), document.getElementById("to")];
-  selects.forEach(select => {
-    [...select.options].forEach(opt => {
-      if (!opt.value) return;
-      const hour = parseInt(opt.value, 10);
-      if (bookedHours.has(hour)) {
-        opt.disabled = true;
-        opt.style.color = "red";
-        opt.style.textDecoration = "line-through";
-      }
-    });
+    for (let h = start + 1; h < end; h++) {
+      disableHour(fromSelect, h);
+      disableHour(toSelect, h);
+    }
+
+    disableHour(fromSelect, start);
+
+    disableHour(toSelect, end);
   });
 }
+
+function disableHour(select, hour) {
+  [...select.options].forEach(opt => {
+    if (parseInt(opt.value, 10) === hour) {
+      opt.disabled = true;
+      opt.style.color = "red";
+      opt.style.textDecoration = "line-through";
+    }
+  });
+}
+
 
   document.getElementById("date").addEventListener("change", markBookedTimes);
   document.getElementById("am_pm").addEventListener("change", markBookedTimes);
@@ -582,4 +587,5 @@
       toSelect.value = "";
     }
   });
-</script></body></html>
+</script></body>
+</html>
