@@ -269,22 +269,30 @@
     <p>⚠ You must take a screenshot to enter the reservation ⚠</p>
     <div id="bookingCode" class="booking-code">CODE</div>
     <br />
-    <button id="okBtn" class="ok-btn" type="button">OK</button>
+    <button id="okBtn" class="ok-btn" type="button" disabled>OK</button>
     <button id="screenshotBtn" class="ok-btn" type="button">📸 Screenshot</button>
-  </div>
+  </div>ٍٍٍٍ
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-  document.getElementById("screenshotBtn").addEventListener("click", () => {
-    const modal = document.getElementById("successModal");
+const okBtn = document.getElementById("okBtn");
+const screenshotBtn = document.getElementById("screenshotBtn");
+
+screenshotBtn.addEventListener("click", () => {
+  const modal = document.getElementById("successModal");
     html2canvas(modal).then(canvas => {
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
       link.download = "booking_screenshot.png";
       link.click();
+      okBtn.disabled = false;
+      okBtn.style.opacity = "1";
     });
   });
+
+okBtn.style.opacity = "0.5";
+
 </script>
 
 

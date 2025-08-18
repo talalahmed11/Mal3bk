@@ -60,7 +60,7 @@
 <body>
   <div class="container">
     <h2>Confirm Booking Code</h2>
-    <input type="text" id="codeInput" placeholder="Enter your booking code" required />
+    <input type="text" id="codeInput" placeholder="Enter booking code" required />
     <button onclick="verifyCode()">Verify Code</button>
     <div class="message" id="message"></div>
     <button class="back-button" onclick="window.location.href='index.html'">Back to Home</button>
@@ -83,35 +83,45 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    window.verifyCode = async function () {
-      const code = document.getElementById("codeInput").value.trim().toUpperCase();
-      const messageEl = document.getElementById("message");
-      messageEl.textContent = "Verifying...";
-      try {
-        const q = query(collection(db, "bookings"), where("code", "==", code));
-        const querySnapshot = await getDocs(q);
+window.verifyCode = async function () {
+  const code = document.getElementById("codeInput").value.trim().toUpperCase();
+  const messageEl = document.getElementById("message");
+  messageEl.textContent = "Verifying...";
+  try {
+    const q = query(collection(db, "bookings"), where("code", "==", code));
+    const querySnapshot = await getDocs(q);
 
-        if (querySnapshot.empty) {
-          messageEl.textContent = "Code not found.";
-          return;
-        }
+    if (querySnapshot.empty) {
+      messageEl.textContent = "Code not found.";
+      messageEl.style.color = "red";
+      return;
+    }
 
-        let docId;
-        querySnapshot.forEach((docSnap) => {
-          docId = docSnap.id;
-        });
+    let docId, bookingData;
+    querySnapshot.forEach((docSnap) => {
+      docId = docSnap.id;
+      bookingData = docSnap.data();
+    });
 
-        const bookingRef = doc(db, "bookings", docId);
-        await updateDoc(bookingRef, {
-          expired: true
-        });
+    if (bookingData.expired === true) {
+      messageEl.textContent = "This code is expired ❌";
+      messageEl.style.color = "red";
+      return;
+    }
 
-        messageEl.textContent = "Code verified and status updated successfully ✅";
-      } catch (error) {
-        console.error("Error verifying code:", error);
-        messageEl.textContent = "An error occurred. Please try again.";
-      }
-    };
+    const bookingRef = doc(db, "bookings", docId);
+    await updateDoc(bookingRef, {
+      expired: true
+    });
+
+    messageEl.textContent = "Code verified and status updated successfully ✅";
+    messageEl.style.color = "green";
+  } catch (error) {
+    console.error("Error verifying code:", error);
+    messageEl.textContent = "An error occurred. Please try again.";
+    messageEl.style.color = "red";
+  }
+};
   </script>
 </body>
 </html>
