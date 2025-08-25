@@ -271,10 +271,11 @@
     <p>Your booking was created successfully.</p>
     <p>⚠ You must take a screenshot to enter the reservation ⚠</p>
     <div id="bookingCode" class="booking-code">CODE</div>
+    <div id="orderCode" class="order-code">ORDER</div>
     <br />
     <button id="okBtn" class="ok-btn" type="button" disabled>OK</button>
     <button id="screenshotBtn" class="ok-btn" type="button">📸 Screenshot</button>
-  </div>ٍٍٍٍ
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -386,8 +387,9 @@ okBtn.style.opacity = "0.5";
     }
   }
 
-  function showModal(code) {
+  function showModal(code, orderId) {
     bookingCodeEl.textContent = code;
+    document.getElementById("orderCode").textContent = orderId;
     modalBackdrop.style.display = "flex";
     requestAnimationFrame(() => {
       successModal.classList.add("show");
@@ -498,97 +500,98 @@ okBtn.style.opacity = "0.5";
   document.getElementById("date").addEventListener("change", markBookedTimes);
   document.getElementById("am_pm").addEventListener("change", markBookedTimes);
 
-  bookingForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+bookingForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const date = document.getElementById("date").value;
-    const from = document.getElementById("from").value;
-    const to = document.getElementById("to").value;
-    const am_pm = document.getElementById("am_pm").value;
-    const code = generateCode();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const date = document.getElementById("date").value;
+  const from = document.getElementById("from").value;
+  const to = document.getElementById("to").value;
+  const am_pm = document.getElementById("am_pm").value;
+  const code = generateCode();
 
-    if (!name || !email || !phone || !date || !from || !to || !am_pm) {
-      alert("Please fill in all fields.");
+  if (!name || !email || !phone || !date || !from || !to || !am_pm) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  try {
+    const bookingsRef = collection(db, "bookings");
+    const q = query(
+      bookingsRef,
+      where("date", "==", date),
+      where("am_pm", "==", am_pm),
+      where("expired", "==", false)
+    );
+    const querySnapshot = await getDocs(q);
+
+    let conflict = false;
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      if (
+        parseInt(from) < parseInt(data.to) &&
+        parseInt(to) > parseInt(data.from)
+      ) {
+        conflict = true;
+      }
+    });
+
+    if (conflict) {
+      showConflictModal();
       return;
     }
 
+    const counterRef = doc(db, "counters", "bookings");
+    const orderId = await runTransaction(db, async (tx) => {
+      const snap = await tx.get(counterRef);
+      let next = 1;
+      if (!snap.exists()) {
+        tx.set(counterRef, { next: 2 });
+        next = 1;
+      } else {
+        next = snap.data().next;
+        tx.update(counterRef, { next: next + 1 });
+      }
+      const docId = `Order #${next}`;
+      tx.set(doc(bookingsRef, docId), {
+        name,
+        email,
+        phone,
+        date,
+        from,
+        to,
+        am_pm,
+        code,
+        expired: false,
+        createdAt: serverTimestamp(),
+      });
+      return docId;
+    });
+
+    showModal(code, orderId);
+
     try {
-      const bookingsRef = collection(db, "bookings");
-      const q = query(
-        bookingsRef,
-        where("date", "==", date),
-        where("am_pm", "==", am_pm),
-        where("expired", "==", false)
-      );
-
-      const querySnapshot = await getDocs(q);
-
-      let conflict = false;
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        if (
-          parseInt(from) < parseInt(data.to) &&
-          parseInt(to) > parseInt(data.from)
-        ) {
-          conflict = true;
-        }
+      emailjs.send("service_d75wk4a", "template_fo5wwpn", {
+        to_name: name,
+        to_email: email,
+        phone: phone,
+        booking_date: date,
+        booking_from: from + " " + am_pm,
+        booking_to: to + " " + am_pm,
+        booking_code: code,
+        order_id: orderId
       });
-
-      if (conflict) {
-        showConflictModal();
-        return;
-      }
-
-      const counterRef = doc(db, "counters", "bookings");
-      await runTransaction(db, async (tx) => {
-        const snap = await tx.get(counterRef);
-        let next = 1;
-        if (!snap.exists()) {
-          tx.set(counterRef, { next: 2 });
-          next = 1;
-        } else {
-          next = snap.data().next;
-          tx.update(counterRef, { next: next + 1 });
-        }
-        const docId = `Order #${next}`;
-        tx.set(doc(bookingsRef, docId), {
-          name,
-          email,
-          phone,
-          date,
-          from,
-          to,
-          am_pm,
-          code,
-          expired: false,
-          createdAt: serverTimestamp(),
-        });
-      });
-
-      showModal(code);
-
-      try {
-        emailjs.send("service_d75wk4a", "template_fo5wwpn", {
-          to_name: name,
-          to_email: email,
-          phone: phone,
-          booking_date: date,
-          booking_from: from + " " + am_pm,
-          booking_to: to + " " + am_pm,
-          booking_code: code
-        });
-      } catch (emailErr) {
-        console.warn("EmailJS send failed:", emailErr);
-      }
-
-    } catch (err) {
-      console.error("Error during booking:", err);
-      alert("Something went wrong. Please try again.");
+    } catch (emailErr) {
+      console.warn("EmailJS send failed:", emailErr);
     }
-  });
+
+  } catch (err) {
+    console.error("Error during booking:", err);
+    alert("Something went wrong. Please try again.");
+  }
+});
 </script>
 </body><script>
   const fromSelect = document.getElementById("from");
