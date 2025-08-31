@@ -65,6 +65,7 @@ width: 100;
   font-weight: bold;
 }
 .Home{
+  min-width: 50vh;
   min-height: 125vh;
   display: flex;
   justify-content: center;
