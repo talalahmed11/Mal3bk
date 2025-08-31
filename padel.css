@@ -15,7 +15,7 @@ width: 100;
 }
 
 .site-header {
-  background-color: #0078be; /* Blue background */
+  background-color: #0d47a1; /* Blue background */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -67,8 +67,9 @@ width: 100;
 .Home{
   min-height: 125vh;
   display: flex;
+  justify-content: center;
   align-items: center;
-  background: url(img/WhatsApp\ Image\ 2025-07-17\ at\ 19.10.36_f316f9bd.jpg)no-repeat;
+  background: url(img/WhatsApp\ Image\ 2025-08-31\ at\ 09.00.52_b2331e3d.jpg)no-repeat;
   background-size: cover;
   background-position: center;
 }
@@ -84,25 +85,23 @@ section{
   text-transform: uppercase;
   color: #fff;
 }
-.btn{
-  color: white;
-  background-color: #0078be;
-  text-decoration: none;
-  font-size: 1.1em;
-  font-weight: 600;
-  display: inline-block;
-  padding: 20px;
-  letter-spacing: 1px;
-  border-radius: 15px;
-  margin-bottom: 40px;
-  transition: 0.7s ease;
-}
+.btn {
+   background:#ffcc00;
+   color:#0d47a1;
+   padding: 12px 30px;
+   border: none;
+   font-size: 40px;
+   cursor: pointer;
+   border-radius:5px;
+   text-decoration: none;}
+
+
 .btn :hover{
    transform: scale(1.1);
 }
 
 .Contact-h1{
-  color: #0078be;
+  color: #0d47a1;
   justify-content: center;
   display: flex;
   font-weight: bold;
@@ -119,7 +118,7 @@ section{
 
     h2 {
       text-align: center;
-      color: #0078be;
+      color: #0d47a1;
       margin-bottom: 25px;
     }
 
@@ -127,7 +126,7 @@ section{
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
-      color: #0078be;
+      color: #0d47a1;
     }
 
     input, textarea {
@@ -141,7 +140,7 @@ section{
     }
 
     input:focus, textarea:focus {
-      border-color: #0078be;
+      border-color: #0d47a1;
       outline: none;
     }
 
@@ -153,7 +152,7 @@ section{
     button {
       width: 100%;
       padding: 12px;
-      background-color: #0078be;
+      background-color: #0d47a1;
       color: white;
       border: none;
       border-radius: 5px;
@@ -163,7 +162,7 @@ section{
     }
 
     button:hover {
-      background-color: #0078be;
+      background-color: #0d47a1;
     }
 
     @media (max-width: 600px) {
@@ -188,8 +187,8 @@ section{
 }
 
 .project-card {
-    background-color: #0078be;
-    border: 1px solid #0078be;
+    background-color: #0d47a1;
+    border: 1px solid #0d47a1;
     min-height: 14em;
     width: 23em;
     overflow: hidden;
@@ -217,7 +216,7 @@ section{
 
 .project-category {
     font-size: 0.8em;
-    color: #0078be;
+    color: #0d47a1;
 }
 
 .project-title {
@@ -231,7 +230,7 @@ section{
 
 .more-details {
     text-decoration: none;
-    color: #0078be;
+    color: #0d47a1;
     justify-content: center;
     margin: auto;
 }
@@ -252,7 +251,7 @@ section{
       padding-left: 100%;
       animation: scroll-left 15s linear infinite;
       font-size: 16px;
-      color: #0078be;
+      color: #0d47a1;
       font-weight: bold;
     }
 
@@ -278,14 +277,14 @@ section{
 /* Tournament Card */
 .tournament-card {
   background-color: white;
-  border-left: 6px solid #0078be;
+  border-left: 6px solid #0d47a1;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tournament-card h2 {
-  color: #0078be;
+  color: #0d47a1;
   margin-bottom: 10px;
 }
 
@@ -293,7 +292,7 @@ section{
   display: inline-block;
   margin-top: 15px;
   padding: 10px 15px;
-  background-color: #0078be;
+  background-color: #0d47a1;
   color: white;
   text-decoration: none;
   border-radius: 4px;
@@ -324,13 +323,13 @@ section{
 th{
   margin: auto;
   font-weight: bold;
-  border: 1px solid #0078be;
+  border: 1px solid #0d47a1;
   padding: 10px;
 
 
 }
 tr td{
-    border: 3px solid #0077b6;
+    border: 3px solid #0d47a1;
     padding: 20px;
     border-radius: 0px;
     box-sizing: border-box;
@@ -342,23 +341,23 @@ td{
     vertical-align: inherit;
     font-weight: bold;
         unicode-bidi: isolate;
-        color: #0077b6;
+        color: #0d47a1;
         justify-content: center;
 }
 table {
    margin: 0 auto;
     border-radius: 30px;
-    color: #0077b6;
+    color: #0d47a1;
     width: 100%;
     border: 1px;
-    border: #0077b6;
+    border: #0d47a1;
     table-layout: fixed;
     word-wrap: 100;
     
 }
 tr td a{
   text-decoration: none;
-  color: #0077b6;
+  color: #0d47a1;
 }
 .Homess{
    min-height: 70vh;
