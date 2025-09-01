@@ -70,10 +70,14 @@ width: 100;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url(img/background.jpg)no-repeat;
+  background: url(img/background2.jpg)no-repeat;
   background-size: cover;
   background-position: center;
 }
+  @media (max-width: 768px) {
+         .Home { background-image: url("img/background2.jpg"); /* ضع مسار صورة الموبايل */ }
+      }
+
 section{
   padding: 2rem 7%;
 }
@@ -369,27 +373,3 @@ tr td a{
   background-position: center;
   justify-content: space-between;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
