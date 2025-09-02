@@ -65,16 +65,16 @@ width: 100;
   font-weight: bold;
 }
 .Home{
-  min-width: 50vh;
-  min-height: 125vh;
+.hero {
+  background-image: url("img/background2.jpg");
+  background-size: cover;      
+  background-position: center;  
+  background-repeat: no-repeat; 
+  height: 100vh;               
   display: flex;
   justify-content: center;
   align-items: center;
-  background-size: cover;
-  background-position: center;
-  background-image: url("img/background2.jpg");
-  background-repeat: no-repeat; 
-  background-size: contain;
+}
 
 }
 
