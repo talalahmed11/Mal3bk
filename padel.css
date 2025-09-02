@@ -70,13 +70,13 @@ width: 100;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url(img/background2.jpg)no-repeat;
   background-size: cover;
   background-position: center;
+  background-image: url("img/background2.jpg");
+  background-repeat: no-repeat; 
+  background-size: contain;
+
 }
-  @media (max-width: 768px) {
-         .Home { background-image: url("img/background2.jpg"); /* ضع مسار صورة الموبايل */ }
-      }
 
 section{
   padding: 2rem 7%;
