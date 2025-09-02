@@ -311,6 +311,7 @@ section{
   margin: auto;
   background:var(--card);padding:48px;
   justify-content: center;
+  height: 80vh;
 }
 
 .hero-text h1{
@@ -321,7 +322,7 @@ section{
 .hero-text p{margin:0 0 22px 0;color:var(--muted);font-size:1.05rem}
 .cta{
   display:inline-block;background:var(--primary);color:#0d47a1;text-decoration:none;
-  padding:14px 22px;border-radius:12px;font-weight:800;letter-spacing:.1px
+  padding:14px 22px;border-radius:12px;font-weight:800;letter-spacing:.1px; 
 }
 .cta:hover{transform:translateY(-1px);filter:brightness(1.05)}
 
