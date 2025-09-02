@@ -65,7 +65,7 @@ width: 100;
   font-weight: bold;
 }
 .Home{
-  background-image: url(img/background2.jpg);
+  background-image: url(img/ChatGPT\ Image\ Sep\ 2\,\ 2025\,\ 06_49_27\ AM.png);
   background-size: cover;      
   background-position: center;  
   background-repeat: no-repeat; 
@@ -73,9 +73,8 @@ width: 100;
   display: flex;
   justify-content: center;
   align-items: center;
-
-
 }
+
 
 section{
   padding: 2rem 7%;
@@ -313,62 +312,7 @@ section{
   gap: 20px;
   margin-top: 20px;
 }
-.Homes{
-   min-height: 100vh;
-   margin: auto;
-  flex-direction: row;
-  align-items: center;
-  background: url(img/WhatsApp\ Image\ 2025-07-20\ at\ 16.42.48_d8e0aa13.jpg)no-repeat;
-  background-size: cover;
-  background-position: center;
-  justify-content: space-between;
-  
-}
-th{
-  margin: auto;
-  font-weight: bold;
-  border: 1px solid #0d47a1;
-  padding: 10px;
 
-
-}
-tr td{
-    border: 3px solid #0d47a1;
-    padding: 20px;
-    border-radius: 0px;
-    box-sizing: border-box;
-
-}
-td{
-    text-align: inherit;
-    display: flex;
-    vertical-align: inherit;
-    font-weight: bold;
-        unicode-bidi: isolate;
-        color: #0d47a1;
-        justify-content: center;
-}
-table {
-   margin: 0 auto;
-    border-radius: 30px;
-    color: #0d47a1;
-    width: 100%;
-    border: 1px;
-    border: #0d47a1;
-    table-layout: fixed;
-    word-wrap: 100;
-    
-}
-tr td a{
-  text-decoration: none;
-  color: #0d47a1;
-}
-.Homess{
-   min-height: 70vh;
-   margin: auto;
-  flex-direction: row;
-  align-items: center;
-  background-size: cover;
-  background-position: center;
-  justify-content: space-between;
+.locked{
+  pointer-events: none;
 }
