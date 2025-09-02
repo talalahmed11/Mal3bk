@@ -307,10 +307,9 @@ section{
 }
 
 .card.hero{
-  display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:center;
-  background:var(--card);padding:48px;
-  border-radius:var(--radius-lg);
-  box-shadow: var(--shadow);
+  display:grid;grid-template-columns:1.1fr 1fr;align-items:center;
+  background: var(--card);padding: 48px;
+
 }
 
 
