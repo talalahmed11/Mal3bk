@@ -65,8 +65,7 @@ width: 100;
   font-weight: bold;
 }
 .Home{
-.hero {
-  background-image: url("img/background2.jpg");
+  background-image: url(img/background2.jpg);
   background-size: cover;      
   background-position: center;  
   background-repeat: no-repeat; 
@@ -74,7 +73,7 @@ width: 100;
   display: flex;
   justify-content: center;
   align-items: center;
-}
+
 
 }
 
