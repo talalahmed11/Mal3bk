@@ -1,22 +1,44 @@
 <!DOCTYPE html>
 <html lang="eg">
-    <head>
-   <meta charset="UTF-8">
-   <title>Mal3bk</title>
-   <meta name="description" content="Free Web tutorials">
-   <meta name="keywords" content="padel , football">
-   <meta name="author" content="talal ahmed">
-   <meta name="viewport" content="width=device-width, initial-scale=0.7">
-   <link rel="stylesheet" href="padel.css">
-    </head>
-    <body>
-      <div class="announcement-bar" id="announcement">
+<head>
+  <meta charset="UTF-8">
+  <title>Mal3bk</title>
+  <meta name="description" content="Free Web tutorials">
+  <meta name="keywords" content="padel , football">
+  <meta name="author" content="talal ahmed">
+  <meta name="viewport" content="width=device-width, initial-scale=0.7">
+  <link rel="stylesheet" href="padel.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    .cta {
+      display: inline-block;
+      background: #0d47a1; 
+      color: white;
+      text-decoration: none;
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 1;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: 0.3s ease;
+    }
+
+    .cta:hover {
+      background: #005f8a;
+      box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement-bar" id="announcement">
     <div class="announcement-content">
-       🎾Book your padel court in seconds, only here 🎾
+      🎾Book your padel court in seconds, only here 🎾
     </div>
-       </div>
-          <header class="site-header">
-            <div class="logo-container">
+  </div>
+
+  <header class="site-header">
+    <div class="logo-container">
       <a href="index.html"><img src="img/mal3bk-logo.png" alt="Mal3bk" class="logo" /></a>
     </div>
     <nav class="navbar">
@@ -26,16 +48,43 @@
         <li><a href="">Tournaments (locked)</a></li>
       </ul>
     </nav>
-          </header>
-             <main class="card hero">
-      <div class="hero-text">
-        <h1>Book your<br/>padel courts</h1>
-        <p>Easily book padel courts in your area</p>
-        <a class="cta" href="index3.html">Book now</a>
-      </div>
-      <div class="hero-media">
-        <img src="img/WhatsApp Image 2025-09-02 at 14.08.52_dfd05a29.jpg" alt="Blue padel courts" />
-      </div>
-    </main>
-    </body>
+  </header>
+<main class="card hero">
+  <div class="hero-text">
+    <h1 data-aos="fade-down">Book your<br/>padel courts</h1>
+    <p data-aos="fade-down">Easily book padel courts in your area</p>
+
+    <a class="cta" href="index3.html" data-aos="fade-up">Book now</a>
+  </div>
+    <div class="hero-media" data-aos="fade-left">
+      <img src="img/WhatsApp Image 2025-09-02 at 14.08.52_dfd05a29.jpg" alt="Blue padel courts" />
+    </div>
+</main>
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-about">
+      <h3>Mal3bk</h3>
+    </div>
+    <div class="footer-social">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/mal3bk.eg/#"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@mal3bk"><i class="fab fa-tiktok"></i></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Mal3bk. All rights reserved.</p>
+  </div>
+</footer>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000, 
+    once: false     
+  });
+</script>
+
+</body>
 </html>
