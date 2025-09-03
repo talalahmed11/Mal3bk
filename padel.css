@@ -310,10 +310,9 @@ section{
 
 .card.hero{
   size: 50%;
-  display:grid;grid-template-columns:1.1fr 1fr;align-items:center;
+  display:grid;grid-template-columns:1.1fr 1fr;align-items: center;
   margin: auto;
   padding: 48px 48px 0 0;
-  justify-content: center;
   height: 80vh;
   width: 100%;
 }
