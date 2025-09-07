@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Mal3bk</title>
-  <meta name="description" content="Free Web tutorials">
-  <meta name="keywords" content="padel , football">
-  <meta name="author" content="talal ahmed">
   <meta name="viewport" content="width=device-width, initial-scale=0.7">
   <link rel="stylesheet" href="padel.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
     .cta {
@@ -23,17 +21,87 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       transition: 0.3s ease;
     }
-
     .cta:hover {
       background: #005f8a;
       box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown img {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      padding: 10px;
+      color: #000;
+    }
+    .dropdown-content.active {
+      display: block;
+    }
+    .dropdown-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+    .dropdown-header img.profile-pic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border: 2px solid #ccc;
+    }
+    .dropdown-header h4 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      color: #000;
+    }
+    .dropdown-header p {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+    }
+    .dropdown-content button {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #000;
+    }
+    .dropdown-content button:hover:not(:disabled) {
+      background: #f0f0f0;
+    }
+    .dropdown-content button:disabled {
+      color: #aaa;
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
   <div class="announcement-bar" id="announcement">
     <div class="announcement-content">
-      🎾Book your padel court in seconds, only here 🎾
+       🎾Book your padel court in seconds, only here🎾 
     </div>
   </div>
 
@@ -46,45 +114,151 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="index3.html">Matches</a></li>
         <li><a href="">Tournaments (locked)</a></li>
+        <li>
+          <div class="dropdown" id="dropdownWrapper">
+            <img src="img/personal2.png" id="accountIcon" alt="Account">
+            <div class="dropdown-content" id="dropdownMenu">
+              <div class="dropdown-header">
+                <img id="profilePic" class="profile-pic" src="img/personal.png" alt="Profile Picture">
+                <h4 id="userName">Unknown</h4>
+                <p id="userUsername">@guest</p>
+              </div>
+              <button id="settingsBtn" disabled>⚙️ Settings</button>
+              <button id="logoutBtn" style="display:none;">🚪 Log out</button>
+              <button id="loginBtn">🔑 Login / Register</button>
+            </div>
+          </div>
+        </li>
       </ul>
     </nav>
   </header>
-<main class="card hero">
-  <div class="hero-text">
-    <h1 data-aos="fade-down">Book your<br/>padel courts</h1>
-    <p data-aos="fade-down">Easily book padel courts in your area</p>
 
-    <a class="cta" href="index3.html" data-aos="fade-up">Book now</a>
-  </div>
+  <main class="card hero">
+    <div class="hero-text">
+      <h1 data-aos="fade-down">Book your<br/>padel courts</h1>
+      <p data-aos="fade-down">Easily book padel courts in your area</p>
+      <a class="cta" href="#" id="bookNowBtn" data-aos="fade-up">Book now</a>
+    </div>
     <div class="hero-media" data-aos="fade-left">
       <img src="img/WhatsApp Image 2025-09-02 at 14.08.52_dfd05a29.jpg" alt="Blue padel courts" />
     </div>
-</main>
-<footer class="site-footer">
-  <div class="footer-content">
-    <div class="footer-about">
-      <h3>Mal3bk</h3>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-about">
+        <h3>Mal3bk</h3>
+        <p>text</p>
+      </div>
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/mal3bk.eg/#"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@mal3bk"><i class="fab fa-tiktok"></i></a>
+      </div>
     </div>
-    <div class="footer-social">
-      <a href="#"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://www.instagram.com/mal3bk.eg/#"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.tiktok.com/@mal3bk"><i class="fab fa-tiktok"></i></a>
+    <div class="footer-bottom">
+      <p>© 2025 Mal3bk. All rights reserved.</p>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2025 Mal3bk. All rights reserved.</p>
-  </div>
-</footer>
+  </footer>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script type="module">
+    AOS.init({ duration: 1000, once: false });
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 1000, 
-    once: false     
-  });
-</script>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
+      authDomain: "mlaab-city.firebaseapp.com",
+      projectId: "mlaab-city",
+      storageBucket: "mlaab-city.appspot.com",
+      messagingSenderId: "910383180422",
+      appId: "1:910383180422:web:3feb8fad61d2cab5917f07",
+      measurementId: "G-YQ0016JLVH",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const accountIcon = document.getElementById("accountIcon");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const dropdownWrapper = document.getElementById("dropdownWrapper");
+    const userName = document.getElementById("userName");
+    const userUsername = document.getElementById("userUsername");
+    const profilePic = document.getElementById("profilePic");
+    const settingsBtn = document.getElementById("settingsBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const bookNowBtn = document.getElementById("bookNowBtn");
+
+    accountIcon.addEventListener("click", () => {
+      dropdownMenu.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!dropdownWrapper.contains(e.target)) {
+        dropdownMenu.classList.remove("active");
+      }
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            userName.textContent = data.name || "User";
+            userUsername.textContent = data.username ? "@" + data.username : "@unknown";
+          } else {
+            userName.textContent = "User";
+            userUsername.textContent = "@unknown";
+          }
+          profilePic.src = user.photoURL || "img/personal.png";
+          settingsBtn.disabled = false;
+          logoutBtn.style.display = "block";
+          loginBtn.style.display = "none";
+        } catch (err) {
+          console.error(err);
+          userName.textContent = "User";
+          userUsername.textContent = "@unknown";
+          profilePic.src = "img/personal.png";
+        }
+      } else {
+        userName.textContent = "Unknown";
+        userUsername.textContent = "@guest";
+        profilePic.src = "img/personal.png";
+        settingsBtn.disabled = true;
+        logoutBtn.style.display = "none";
+        loginBtn.style.display = "block";
+      }
+    });
+
+    settingsBtn.addEventListener("click", () => {
+      if (!settingsBtn.disabled) {
+        window.location.href = "settings.html";
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth);
+    });
+
+    loginBtn.addEventListener("click", () => {
+      window.location.href = "index12.html";
+    });
+
+    bookNowBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (auth.currentUser) {
+        window.location.href = "index3.html";
+      } else {
+        window.location.href = "index12.html";
+      }
+    });
+  </script>
 </body>
 </html>

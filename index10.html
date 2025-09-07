@@ -95,62 +95,70 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
-      authDomain: "mlaab-city.firebaseapp.com",
-      projectId: "mlaab-city",
-      storageBucket: "mlaab-city.firebasestorage.app",
-      messagingSenderId: "910383180422",
-      appId: "1:910383180422:web:3feb8fad61d2cab5917f07",
-      measurementId: "G-YQ0016JLVH"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
+    authDomain: "mlaab-city.firebaseapp.com",
+    projectId: "mlaab-city",
+    storageBucket: "mlaab-city.firebasestorage.app",
+    messagingSenderId: "910383180422",
+    appId: "1:910383180422:web:3feb8fad61d2cab5917f07",
+    measurementId: "G-YQ0016JLVH"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
 
-    window.verifyCode = async function () {
-      const code = document.getElementById("codeInput").value.trim().toUpperCase();
-      const messageEl = document.getElementById("message");
-      messageEl.textContent = "Cancelling...";
-      try {
-        const q = query(collection(db, "bookings"), where("code", "==", code));
-        const querySnapshot = await getDocs(q);
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index12.html";
+    }
+  });
 
-        if (querySnapshot.empty) {
-          messageEl.textContent = "Code not found.";
-          messageEl.style.color = "red";
-          return;
-        }
+  window.verifyCode = async function () {
+    const code = document.getElementById("codeInput").value.trim().toUpperCase();
+    const messageEl = document.getElementById("message");
+    messageEl.textContent = "Cancelling...";
+    try {
+      const q = query(collection(db, "bookings"), where("code", "==", code));
+      const querySnapshot = await getDocs(q);
 
-        let docId, bookingData;
-        querySnapshot.forEach((docSnap) => {
-          docId = docSnap.id;
-          bookingData = docSnap.data();
-        });
-
-        if (bookingData.expired === true) {
-          messageEl.textContent = "This booking is already cancelled.";
-          messageEl.style.color = "red";
-          return;
-        }
-
-        const bookingRef = doc(db, "bookings", docId);
-        await updateDoc(bookingRef, {
-          expired: true
-        });
-
-        messageEl.textContent = "Your Booking has been successfully canceled and the status has been updated. ✅";
-        messageEl.style.color = "green";
-      } catch (error) {
-        console.error("Error Booking code:", error);
-        messageEl.textContent = "An error occurred. Please try again.";
+      if (querySnapshot.empty) {
+        messageEl.textContent = "Code not found.";
         messageEl.style.color = "red";
+        return;
       }
-    };
+
+      let docId, bookingData;
+      querySnapshot.forEach((docSnap) => {
+        docId = docSnap.id;
+        bookingData = docSnap.data();
+      });
+
+      if (bookingData.expired === true) {
+        messageEl.textContent = "This booking is already cancelled.";
+        messageEl.style.color = "red";
+        return;
+      }
+
+      const bookingRef = doc(db, "bookings", docId);
+      await updateDoc(bookingRef, {
+        expired: true
+      });
+
+      messageEl.textContent = "Your Booking has been successfully canceled and the status has been updated. ✅";
+      messageEl.style.color = "green";
+    } catch (error) {
+      console.error("Error Booking code:", error);
+      messageEl.textContent = "An error occurred. Please try again.";
+      messageEl.style.color = "red";
+    }
+  };
   </script>
 </body>
 </html>

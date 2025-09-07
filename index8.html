@@ -345,6 +345,7 @@ okBtn.style.opacity = "0.5";
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
   import { getFirestore, collection, doc, setDoc, runTransaction, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
@@ -359,6 +360,7 @@ okBtn.style.opacity = "0.5";
   const app = initializeApp(firebaseConfig);
   getAnalytics(app);
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
   emailjs.init("TX8-siv12PBErzriy");
 
@@ -368,6 +370,13 @@ okBtn.style.opacity = "0.5";
       chars[Math.floor(Math.random() * chars.length)]
     ).join("");
   }
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index12.html";
+    }
+  });
+  
 
   const bookingForm = document.getElementById("bookingForm");
   const modalBackdrop = document.getElementById("modalBackdrop");
@@ -612,5 +621,7 @@ bookingForm.addEventListener("submit", async (e) => {
       toSelect.value = "";
     }
   });
+  
+  
 </script></body>
 </html>

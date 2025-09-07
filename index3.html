@@ -52,5 +52,28 @@
                 </div>
             </div>
             </section>
+            <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+            import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
+                authDomain: "mlaab-city.firebaseapp.com",
+                projectId: "mlaab-city",
+                storageBucket: "mlaab-city.appspot.com",
+                messagingSenderId: "910383180422",
+                appId: "1:910383180422:web:3feb8fad61d2cab5917f07",
+                measurementId: "G-YQ0016JLVH"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                window.location.href = "index12.html";
+                }
+            });
+            </script>
     </body>
 </html>
