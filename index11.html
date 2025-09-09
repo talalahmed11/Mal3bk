@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.7">
   <link rel="stylesheet" href="padel.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="navbar-icon.css">
 
   <style>
     body {
@@ -198,6 +199,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="index3.html">Matches</a></li>
         <li><a href="#">Tournaments (locked)</a></li>
+        <li><div id="navbar-placeholder"></div></li>
       </ul>
     </nav>
   </header>
@@ -330,5 +332,14 @@
       }
     });
   </script>
+
+<script>
+  fetch("navbar-icon.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar-placeholder").innerHTML = data;
+      import("./navbar-icon.js");
+    });
+</script>
 </body>
 </html>

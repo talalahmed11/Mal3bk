@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mal3bk</title>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      transition: .3s;
+    }
+    :root {
+      --bg: #f5f6fa;
+      --card: #fff;
+      --text: #2d3436;
+      --primary: #0d47a1;
+    }
+    body.dark {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #f1f1f1;
+      --primary: #64b5f6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .edit-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--primary);
+      transition: .2s;
+    }
+    .edit-btn:hover {
+      transform: scale(1.2);
+    }
+    .logout-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      text-align: center;
+      border: none;
+      border-radius: 10px;
+      background: #e74c3c;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 40px;
+    }
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal {
+      background: var(--card);
+      width: 400px;
+      max-width: 100%;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+      transform: scale(.9);
+      opacity: 0;
+      transition: .3s;
+      position: relative;
+    }
+    .modal.show {
+      transform: scale(1);
+      opacity: 1;
+    }
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .edit-input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: var(--card);
+      color: var(--text);
+    }
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      cursor: pointer;
+    }
+    .input-group {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 32px;
+    }
+    .success {
+      background: #2ecc71;
+    }
+    .error {
+      background: #e74c3c;
+    }
+    .ok-btn {
+      margin-top: 16px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      cursor: pointer;
+    }
+    .bookings-section h2 {
+      margin: 20px 0 10px;
+      font-size: 22px;
+    }
+    .filter-btn {
+      margin: 0 5px 15px 0;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .filter-btn.active {
+      background: #2ecc71;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    th,
+    td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: var(--primary);
+      color: #fff;
+    }
+    tr:hover {
+      background: rgba(0,0,0,.05);
+    }
+    .status.active {
+      color: green;
+      font-weight: bold;
+    }
+    .status.expired {
+      color: red;
+      font-weight: bold;
+    }
+
+    .back-btn {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text);
+    transition: 0.2s;
+  }
+  .back-btn:hover {
+    transform: scale(1.2);
+    color: var(--primary);
+  }
+
+  .table-wrapper {
+  max-height: 250px; 
+  overflow-y: auto;
+  border-radius: 12px;
+  }
+
+  .table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: var(--primary);
+    color: #fff;
+    z-index: 2;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ Settings</h1>
+
+    <div class="card">
+      <div>
+        <h3>Name & Username</h3>
+        <p id="name-info">Loading...</p>
+      </div>
+      <button class="edit-btn" onclick="openModal('name')">✏️</button>
+    </div>
+
+    <button class="back-btn" onclick="window.location.href='index.html'">✖</button>
+
+    <div class="card">
+      <div>
+        <h3>Phone & Email</h3>
+        <p id="contact-info">Loading...</p>
+      </div>
+      <button class="edit-btn" onclick="openModal('contact')">✏️</button>
+    </div>
+
+    <div class="card">
+      <div>
+        <h3>Date of Birth</h3>
+        <p id="dob-info">Loading...</p>
+      </div>
+      <button class="edit-btn" onclick="openModal('dob')">✏️</button>
+    </div>
+
+    <div class="card">
+      <div>
+        <h3>Password</h3>
+        <p>Change your password</p>
+      </div>
+      <button class="edit-btn" onclick="openModal('password')">✏️</button>
+    </div>
+
+    <div class="bookings-section">
+      <h2>📅 Your Bookings</h2>
+      <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('active', this)">Active</button>
+      <button class="filter-btn" onclick="setFilter('expired', this)">Expired</button>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Match</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsList"></tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <button class="logout-btn" onclick="logout()">🚪 Log out</button>
+  </div>
+
+  <div id="modal-name" class="modal-backdrop">
+    <div class="modal">
+      <button class="close-btn" onclick="hideModal('modal-name')">✖</button>
+      <h3>Edit Name & Username</h3>
+      <input type="text" id="input-name" class="edit-input" placeholder="Full Name" required>
+      <input type="text" id="input-username" class="edit-input" placeholder="Username" required>
+      <button class="ok-btn" onclick="saveName()">Save</button>
+    </div>
+  </div>
+
+  <div id="modal-contact" class="modal-backdrop">
+    <div class="modal">
+      <button class="close-btn" onclick="hideModal('modal-contact')">✖</button>
+      <h3>Edit Phone & Email</h3>
+      <input type="text" id="input-phone" class="edit-input" placeholder="Phone" required>
+      <input type="email" id="input-email" class="edit-input" placeholder="Email" required>
+      <button class="ok-btn" onclick="saveContact()">Save</button>
+    </div>
+  </div>
+
+  <div id="modal-dob" class="modal-backdrop">
+    <div class="modal">
+      <button class="close-btn" onclick="hideModal('modal-dob')">✖</button>
+      <h3>Edit Date of Birth</h3>
+      <input type="date" id="input-dob" class="edit-input" required>
+      <button class="ok-btn" onclick="saveDob()">Save</button>
+    </div>
+  </div>
+
+  <div id="modal-password" class="modal-backdrop">
+    <div class="modal">
+      <button class="close-btn" onclick="hideModal('modal-password')">✖</button>
+      <h3>Change Password</h3>
+      <div class="input-group">
+        <input type="password" id="current-pass" class="edit-input" placeholder="Current Password" required>
+        <span class="toggle-password" onclick="togglePass('current-pass')">👁</span>
+      </div>
+      <div class="input-group">
+        <input type="password" id="new-pass" class="edit-input" placeholder="New Password" required>
+        <span class="toggle-password" onclick="togglePass('new-pass')">👁</span>
+      </div>
+      <div class="input-group">
+        <input type="password" id="confirm-pass" class="edit-input" placeholder="Confirm New Password" required>
+        <span class="toggle-password" onclick="togglePass('confirm-pass')">👁</span>
+      </div>
+      <button class="ok-btn" onclick="savePassword()">Save</button>
+    </div>
+  </div>
+
+  <div id="successBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="circle success">✔</div>
+      <h3>Success</h3>
+      <p>Changes saved successfully!</p>
+      <button class="ok-btn" onclick="hideModal('successBackdrop')">OK</button>
+    </div>
+  </div>
+
+  <div id="errorBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="circle error">✖</div>
+      <h3>Error</h3>
+      <p>Something went wrong. Try again.</p>
+      <button class="ok-btn" onclick="hideModal('errorBackdrop')">OK</button>
+    </div>
+  </div>
+
+  <script src="theme.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
+      authDomain: "mlaab-city.firebaseapp.com",
+      projectId: "mlaab-city",
+      storageBucket: "mlaab-city.appspot.com",
+      messagingSenderId: "910383180422",
+      appId: "1:910383180422:web:3feb8fad61d2cab5917f07",
+      measurementId: "G-YQ0016JLVH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let bookingsData = [];
+    let currentFilter = "all";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "index12.html";
+        return;
+      }
+      currentUser = user;
+      await loadUserInfo();
+      await loadBookings();
+    });
+
+    async function loadUserInfo() {
+      const snap = await getDoc(doc(db, "users", currentUser.uid));
+      if (snap.exists()) {
+        const d = snap.data();
+        document.getElementById("name-info").innerText = `${d.name || "No name"} (${d.username || "No username"})`;
+        document.getElementById("contact-info").innerText = `${d.phone || "No phone"}, ${d.email || "No email"}`;
+        document.getElementById("dob-info").innerText = d.dob || "Not set";
+        document.getElementById("input-name").value = d.name || "";
+        document.getElementById("input-username").value = d.username || "";
+        document.getElementById("input-phone").value = d.phone || "";
+        document.getElementById("input-email").value = d.email || "";
+        document.getElementById("input-dob").value = d.dob || "";
+      }
+    }
+
+    async function loadBookings() {
+      const q = query(collection(db, "bookings"), where("email", "==", currentUser.email));
+      const snap = await getDocs(q);
+      bookingsData = [];
+      snap.forEach(doc => bookingsData.push(doc.data()));
+      renderBookings();
+    }
+
+    function renderBookings() {
+      const list = document.getElementById("bookingsList");
+      list.innerHTML = "";
+      const f = bookingsData.filter(b => {
+        if (currentFilter === "active") return !b.expired;
+        if (currentFilter === "expired") return b.expired;
+        return true;
+      });
+      if (!f.length) {
+        list.innerHTML = `<tr><td colspan="4" style="text-align:center">No bookings found</td></tr>`;
+      } else {
+        f.forEach(d => {
+          const c = d.expired ? "expired" : "active";
+          const t = d.expired ? "Expired" : "Active";
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${d.name || "Booking"}</td><td>${d.date}</td><td>${d.from} - ${d.to} ${d.am_pm}</td><td class="status ${c}">${t}</td>`;
+          list.appendChild(row);
+        });
+      }
+    }
+
+    window.setFilter = (f, btn) => {
+      currentFilter = f;
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderBookings();
+    };
+
+    window.openModal = id => {
+      const m = document.getElementById("modal-" + id);
+      m.style.display = "flex";
+      setTimeout(() => m.querySelector(".modal").classList.add("show"), 10);
+    };
+
+    window.hideModal = id => {
+      const m = document.getElementById(id);
+      m.querySelector(".modal").classList.remove("show");
+      setTimeout(() => m.style.display = "none", 250);
+    };
+
+    window.showSuccess = () => {
+      const m = document.getElementById("successBackdrop");
+      m.style.display = "flex";
+      setTimeout(() => m.querySelector(".modal").classList.add("show"), 10);
+    };
+
+    window.showError = () => {
+      const m = document.getElementById("errorBackdrop");
+      m.style.display = "flex";
+      setTimeout(() => m.querySelector(".modal").classList.add("show"), 10);
+    };
+
+    window.saveName = async () => {
+      const name = document.getElementById("input-name").value.trim();
+      const username = document.getElementById("input-username").value.trim();
+      if (!name || !username) return showError();
+      try {
+        await updateDoc(doc(db, "users", currentUser.uid), { name, username });
+        document.getElementById("name-info").innerText = `${name} (${username})`;
+        hideModal("modal-name");
+        showSuccess();
+      } catch {
+        showError();
+      }
+    };
+
+    window.saveContact = async () => {
+      const phone = document.getElementById("input-phone").value.trim();
+      const email = document.getElementById("input-email").value.trim();
+      if (!phone || !email) return showError();
+      try {
+        await updateDoc(doc(db, "users", currentUser.uid), { phone, email });
+        document.getElementById("contact-info").innerText = `${phone}, ${email}`;
+        hideModal("modal-contact");
+        showSuccess();
+      } catch {
+        showError();
+      }
+    };
+
+    window.saveDob = async () => {
+      const dob = document.getElementById("input-dob").value;
+      if (!dob) return showError();
+      try {
+        await updateDoc(doc(db, "users", currentUser.uid), { dob });
+        document.getElementById("dob-info").innerText = dob;
+        hideModal("modal-dob");
+        showSuccess();
+      } catch {
+        showError();
+      }
+    };
+
+    window.savePassword = async () => {
+      const c = document.getElementById("current-pass").value;
+      const n = document.getElementById("new-pass").value;
+      const f = document.getElementById("confirm-pass").value;
+      if (!c || !n || !f || n !== f) return showError();
+      try {
+        await updatePassword(currentUser, n);
+        hideModal("modal-password");
+        showSuccess();
+      } catch {
+        showError();
+      }
+    };
+
+    window.togglePass = id => {
+      const i = document.getElementById(id);
+      i.type = i.type === "password" ? "text" : "password";
+    };
+
+    window.logout = () => {
+      signOut(auth).catch(showError);
+    };
+  </script>
+</body>
+</html>

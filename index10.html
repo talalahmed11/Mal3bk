@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.7">
   <title>Cancel Booking - MLAAB CITY</title>
   <link rel="stylesheet" href="padel.css" />
+  <link rel="stylesheet" href="navbar-icon.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -81,6 +82,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="index3.html">Matches</a></li>
         <li><a href="">Tournaments (locked)</a></li>
+        <li><div id="navbar-placeholder"></div></li>
       </ul>
     </nav>
   </header>
@@ -160,5 +162,14 @@
     }
   };
   </script>
+
+<script>
+  fetch("navbar-icon.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar-placeholder").innerHTML = data;
+      import("./navbar-icon.js");
+    });
+</script>
 </body>
 </html>

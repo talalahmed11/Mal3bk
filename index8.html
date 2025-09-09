@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.7" />
   <title>Book a Field - MLAAB CITY</title>
   <link rel="stylesheet" href="padel.css" />
+  <link rel="stylesheet" href="navbar-icon.css">
 </head>
 <body>
     <div class="announcement-bar" id="announcement">
@@ -28,7 +29,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
       width: 500px;
       max-width: 95%;
-      margin: 50px auto 20px;
+      margin: 150px auto 20px;
       text-align: left;
     }
     .form-group {
@@ -198,6 +199,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="index3.html">Matches</a></li>
         <li><a href="">Tournaments (locked)</a></li>
+        <li><div id="navbar-placeholder"></div></li>
       </ul>
     </nav>
   </header>
@@ -205,18 +207,6 @@
   <div class="form-container">
     <h2>Book Your court Now</h2>
     <form id="bookingForm">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" id="name" placeholder="your name" required />
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="you@example.com" required />
-      </div>
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <input type="text" id="phone" placeholder="your number" required />
-      </div>
       <div class="form-group">
         <label for="date">Booking date</label>
         <input type="date" id="date" placeholder="Booking date" required />
@@ -344,7 +334,7 @@ okBtn.style.opacity = "0.5";
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-  import { getFirestore, collection, doc, setDoc, runTransaction, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  import { getFirestore, collection, doc, setDoc, runTransaction, serverTimestamp, query, where, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -376,7 +366,6 @@ okBtn.style.opacity = "0.5";
       window.location.href = "index12.html";
     }
   });
-  
 
   const bookingForm = document.getElementById("bookingForm");
   const modalBackdrop = document.getElementById("modalBackdrop");
@@ -454,7 +443,7 @@ okBtn.style.opacity = "0.5";
     const selects = [document.getElementById("from"), document.getElementById("to")];
     for (const s of selects) {
       [...s.options].forEach(opt => {
-        if (!opt.value) return; 
+        if (!opt.value) return;
         opt.disabled = false;
         opt.style.color = "";
         opt.style.textDecoration = "";
@@ -509,119 +498,144 @@ okBtn.style.opacity = "0.5";
   document.getElementById("date").addEventListener("change", markBookedTimes);
   document.getElementById("am_pm").addEventListener("change", markBookedTimes);
 
-bookingForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+  bookingForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const date = document.getElementById("date").value;
-  const from = document.getElementById("from").value;
-  const to = document.getElementById("to").value;
-  const am_pm = document.getElementById("am_pm").value;
-  const code = generateCode();
-
-  if (!name || !email || !phone || !date || !from || !to || !am_pm) {
-    alert("Please fill in all fields.");
-    return;
-  }
-
-  try {
-    const bookingsRef = collection(db, "bookings");
-    const q = query(
-      bookingsRef,
-      where("date", "==", date),
-      where("am_pm", "==", am_pm),
-      where("expired", "==", false)
-    );
-    const querySnapshot = await getDocs(q);
-
-    let conflict = false;
-    querySnapshot.forEach(doc => {
-      const data = doc.data();
-      if (
-        parseInt(from) < parseInt(data.to) &&
-        parseInt(to) > parseInt(data.from)
-      ) {
-        conflict = true;
-      }
-    });
-
-    if (conflict) {
-      showConflictModal();
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be logged in to book.");
       return;
     }
 
-    const counterRef = doc(db, "counters", "bookings");
-    const orderId = await runTransaction(db, async (tx) => {
-      const snap = await tx.get(counterRef);
-      let next = 1;
-      if (!snap.exists()) {
-        tx.set(counterRef, { next: 2 });
-        next = 1;
-      } else {
-        next = snap.data().next;
-        tx.update(counterRef, { next: next + 1 });
-      }
-      const docId = `Order #${next}`;
-      tx.set(doc(bookingsRef, docId), {
-        name,
-        email,
-        phone,
-        date,
-        from,
-        to,
-        am_pm,
-        code,
-        expired: false,
-        createdAt: serverTimestamp(),
-      });
-      return docId;
-    });
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      alert("User profile not found.");
+      return;
+    }
+    const userData = userSnap.data();
+    const name = userData.name;
+    const email = userData.email;
+    const phone = userData.phone;
 
-    showModal(code, orderId);
+    const date = document.getElementById("date").value;
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+    const am_pm = document.getElementById("am_pm").value;
+    const code = generateCode();
 
-    try {
-      emailjs.send("service_d75wk4a", "template_fo5wwpn", {
-        to_name: name,
-        to_email: email,
-        phone: phone,
-        booking_date: date,
-        booking_from: from + " " + am_pm,
-        booking_to: to + " " + am_pm,
-        booking_code: code,
-        order_id: orderId
-      });
-    } catch (emailErr) {
-      console.warn("EmailJS send failed:", emailErr);
+    if (!date || !from || !to || !am_pm) {
+      alert("Please fill in all fields.");
+      return;
     }
 
-  } catch (err) {
-    console.error("Error during booking:", err);
-    alert("Something went wrong. Please try again.");
-  }
-});
+    try {
+      const bookingsRef = collection(db, "bookings");
+      const q = query(
+        bookingsRef,
+        where("date", "==", date),
+        where("am_pm", "==", am_pm),
+        where("expired", "==", false)
+      );
+      const querySnapshot = await getDocs(q);
+
+      let conflict = false;
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (
+          parseInt(from) < parseInt(data.to) &&
+          parseInt(to) > parseInt(data.from)
+        ) {
+          conflict = true;
+        }
+      });
+
+      if (conflict) {
+        showConflictModal();
+        return;
+      }
+
+      const counterRef = doc(db, "counters", "bookings");
+      const orderId = await runTransaction(db, async (tx) => {
+        const snap = await tx.get(counterRef);
+        let next = 1;
+        if (!snap.exists()) {
+          tx.set(counterRef, { next: 2 });
+          next = 1;
+        } else {
+          next = snap.data().next;
+          tx.update(counterRef, { next: next + 1 });
+        }
+        const docId = `Order #${next}`;
+        tx.set(doc(bookingsRef, docId), {
+          name,
+          email,
+          phone,
+          date,
+          from,
+          to,
+          am_pm,
+          code,
+          expired: false,
+          createdAt: serverTimestamp(),
+        });
+        return docId;
+      });
+
+      showModal(code, orderId);
+
+      try {
+        emailjs.send("service_d75wk4a", "template_fo5wwpn", {
+          to_name: name,
+          to_email: email,
+          phone: phone,
+          booking_date: date,
+          booking_from: from + " " + am_pm,
+          booking_to: to + " " + am_pm,
+          booking_code: code,
+          order_id: orderId
+        });
+      } catch (emailErr) {
+        console.warn("EmailJS send failed:", emailErr);
+      }
+
+    } catch (err) {
+      console.error("Error during booking:", err);
+      alert("Something went wrong. Please try again.");
+    }
+  });
 </script>
-</body><script>
+
+<script>
   const fromSelect = document.getElementById("from");
   const toSelect = document.getElementById("to");
   const ampmSelect = document.getElementById("am_pm");
 
-  fromSelect.disabled = true;
-  toSelect.disabled = true;
+  if (fromSelect && toSelect && ampmSelect) {
+    fromSelect.disabled = true;
+    toSelect.disabled = true;
 
-  ampmSelect.addEventListener("change", () => {
-    if (ampmSelect.value) {
-      fromSelect.disabled = false;
-      toSelect.disabled = false;
-    } else {
-      fromSelect.disabled = true;
-      toSelect.disabled = true;
-      fromSelect.value = "";
-      toSelect.value = "";
-    }
-  });
-  
-  
-</script></body>
+    ampmSelect.addEventListener("change", () => {
+      if (ampmSelect.value) {
+        fromSelect.disabled = false;
+        toSelect.disabled = false;
+      } else {
+        fromSelect.disabled = true;
+        toSelect.disabled = true;
+        fromSelect.value = "";
+        toSelect.value = "";
+      }
+    });
+  }
+</script>
+
+<script>
+  fetch("navbar-icon.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar-placeholder").innerHTML = data;
+      import("./navbar-icon.js");
+    });
+</script>
+</body>
 </html>

@@ -7,103 +7,396 @@
   <link rel="stylesheet" href="padel.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    .cta {
-      display: inline-block;
-      background: #0d47a1; 
-      color: white;
-      text-decoration: none;
-      padding: 12px 30px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      border-radius: 1;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      transition: 0.3s ease;
-    }
-    .cta:hover {
-      background: #0d47a1;
-      box-shadow: 0 6px 10px rgba(0,0,0,0.25);
-    }
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-    .dropdown img {
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      border-radius: 50%;
-    }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background: white;
-      min-width: 220px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-      border-radius: 8px;
-      z-index: 1000;
-      padding: 10px;
-      color: #000;
-    }
-    .dropdown-content.active {
-      display: block;
-    }
-    .dropdown-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 15px;
-      border-bottom: 1px solid #ddd;
-    }
-    .dropdown-header img.profile-pic {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 8px;
-      border: 2px solid #ccc;
-    }
-    .dropdown-header h4 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      color: #000;
-    }
-    .dropdown-header p {
-      margin: 0;
-      font-size: 14px;
-      color: #555;
-      text-align: center;
-    }
-    .dropdown-content button {
-      width: 100%;
-      padding: 8px;
-      border: none;
-      background: none;
-      text-align: left;
-      font-size: 15px;
-      cursor: pointer;
-      transition: 0.2s;
-      color: #000;
-    }
-    .dropdown-content button:hover:not(:disabled) {
-      background: #f0f0f0;
-    }
-    .dropdown-content button:disabled {
-      color: #aaa;
-      cursor: not-allowed;
-    }
-  </style>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fff;
+    color: #000;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown img {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    min-width: 220px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    z-index: 1000;
+    padding: 10px;
+    color: #000;
+  }
+  .dropdown-content.active {
+    display: block;
+  }
+  .dropdown-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  .dropdown-header img.profile-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border: 2px solid #ccc;
+  }
+  .dropdown-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+  }
+  .dropdown-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+  }
+  .dropdown-content button {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #000;
+  }
+  .dropdown-content button:hover:not(:disabled) {
+    background: #f0f0f0;
+  }
+  .dropdown-content button:disabled {
+    color: #aaa;
+    cursor: not-allowed;
+  }
+
+  .hero {
+    background: url("img/hero-padel.jpg") no-repeat center center/cover;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 15px;
+  }
+  .btn-primary {
+    background: #00c853;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+  .btn-secondary {
+    background: transparent;
+    border: 2px solid white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+
+  .search-bar {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    top: -40px;
+    max-width: 900px;
+    margin: auto;
+  }
+  .search-bar input, .search-bar button {
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  .search-bar button {
+    background: #0d47a1;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .section {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  .clubs {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .club-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: 300px;
+    text-align: center;
+  }
+  .club-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  .club-card h3 {
+    margin: 15px 0 5px;
+  }
+  .club-card p {
+    margin: 0 0 15px;
+    color: gray;
+  }
+  .club-card a {
+    display: inline-block;
+    margin-bottom: 20px;
+    background: #0d47a1;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+  }
+  .feature {
+    text-align: center;
+    max-width: 250px;
+  }
+  .feature i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #0d47a1;
+  }
+
+.site-footer {
+  background: #0d47a1;
+  color: #fff;
+  padding: 30px 20px 10px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: right;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-about {
+  flex: 1;
+  min-width: 300px;
+}
+
+.footer-about h3 {
+  margin-bottom: 10px;
+}
+
+.footer-about p {
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.footer-social a {
+  color: #fff;
+  font-size: 1.4rem;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.footer-social a:hover {
+  color: #2ecc71;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+  .fa-fast::before {
+    content: "\f3fd"; 
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+  }
+
+  .bookings-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 1100px;
+    width: 95%;
+    margin: -175px auto 175px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    position: relative;
+    z-index: 5;
+  }
+
+  .bookings-section h2,
+  .container h1 {
+    margin-bottom: 15px;
+    color: #1a237e;
+    font-size: 1.6rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filters {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .filter-btn.active {
+    background: #2ecc71;
+    color: #fff;
+  }
+
+  .table-wrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    border-radius: 12px;
+  }
+
+  .table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: #0d47a1;
+    color: #fff;
+    z-index: 2;
+  }
+
+  .bookings-section table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .bookings-section thead {
+    background: #0d47a1;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .bookings-section th,
+  .bookings-section td {
+    padding: 14px;
+    text-align: center;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .bookings-section tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  .bookings-section tr:hover td {
+    background: #f1f1f1;
+  }
+
+  .table-wrapper::-webkit-scrollbar {
+    width: 6px;
+  }
+  .table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 6px;
+  }
+  .table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #999;
+  }
+
+  .status.active {
+    color: green;
+    font-weight: bold;
+  }
+
+  .status.expired {
+    color: red;
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
   <div class="announcement-bar" id="announcement">
     <div class="announcement-content">
-       🎾Book your padel court in seconds, only here🎾 
+      🎾Book your padel court in seconds, only here 🎾
     </div>
   </div>
-
+  <!-- Header -->
   <header class="site-header">
     <div class="logo-container">
       <a href="index.html"><img src="img/mal3bk-logo.png" alt="Mal3bk" class="logo" /></a>
@@ -112,7 +405,7 @@
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="index3.html">Matches</a></li>
-        <li><a href="">Tournaments (locked)</a></li>
+        <li><a href="#">Tournaments (locked)</a></li>
         <li>
           <div class="dropdown" id="dropdownWrapper">
             <img src="img/personal2.png" id="accountIcon" alt="Account">
@@ -132,41 +425,147 @@
     </nav>
   </header>
 
-  <main class="card hero">
-    <div class="hero-text">
-      <h1 data-aos="fade-down">Book your<br/>padel courts</h1>
-      <p data-aos="fade-down">Easily book padel courts in your area</p>
-      <a class="cta" href="#" id="bookNowBtn" data-aos="fade-up">Book now</a>
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Book Your Padel Court<br>Anytime, Anywhere</h1>
+    <p>Fast & easy reservations at your favorite club</p>
+    <div class="hero-buttons">
+      <a href="index3.html" class="btn-primary">Book a Court</a>
+      <a href="#" class="btn-secondary">See Tournaments</a>
     </div>
-    <div class="hero-media" data-aos="fade-left">
-      <img src="img/WhatsApp Image 2025-09-02 at 14.08.52_dfd05a29.jpg" alt="Blue padel courts" />
-    </div>
-  </main>
+  </section>
 
-  <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-about">
-        <h3>Mal3bk</h3>
-        <p>text</p>
-      </div>
-      <div class="footer-social">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/mal3bk.eg/#"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@mal3bk.eg?_t=ZS-8zVlY8m7D0B&_r=1"><i class="fab fa-tiktok"></i></a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2025 Mal3bk. All rights reserved.</p>
-    </div>
-  </footer>
+<!-- Bookings Section -->
+<div class="bookings-section">
+  <h2>📅 Your Bookings</h2>
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" onclick="setFilter('active', this)">Active</button>
+    <button class="filter-btn" onclick="setFilter('expired', this)">Expired</button>
+  </div>
 
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Match</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="bookingsList"></tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+  <!-- Featured Clubs -->
+  <section class="section">
+    <h2>Featured Clubs</h2>
+    <div class="clubs">
+      <div class="club-card">
+        <img src="img/mal3bk book1.jpg" alt="Sunset Padel">
+        <h3>Malaab City</h3>
+        <p>Asyut, Egypt</p>
+        <a href="index8.html">Book Now</a>
+      </div>
+      <div class="club-card">
+        <img src="img/mal3bk book2.jpg" alt="soon">
+        <h3>soon..</h3>
+        <p>soon..</p>
+        <a href="#">Book Now</a>
+      </div>
+      <div class="club-card">
+        <img src="img/mal3bk book2.jpg" alt="soon">
+        <h3>soon..</h3>
+        <p>soon..</p>
+        <a href="#">Book Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section">
+    <h2>How It Works</h2>
+    <div class="features">
+      <div class="feature">
+        <i class="fas fa-map-marker-alt"></i>
+        <h4>Choose Club</h4>
+        <p>Browse padel courts near you</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-calendar"></i>
+        <h4>Pick Time</h4>
+        <p>Select available time</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-play"></i>
+        <h4>Play</h4>
+        <p>Confirm and enjoy your match</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="section">
+    <h2>Why Choose Us</h2>
+    <div class="features">
+      <div class="feature">
+        <i class="fas fa-check-circle"></i>
+        <h4>Instant Booking</h4>
+        <p>Confirmation in seconds</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-mobile-alt"></i>
+        <h4>Mobile Friendly</h4>
+        <p>Book anytime, anywhere</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-lock"></i>
+        <h4>Secure</h4>
+        <p>100% safe booking</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-fast"></i>
+        <h4>Fast</h4>
+        <p>Book in a few seconds</p>
+      </div>
+    </div>
+  </section>
+
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-about">
+      <h3>What is Mal3bk ?</h3>
+      <p>
+        Mal3bk is an online sports courts reservation platform launched in 2025 by Talal Ahmed.
+        The platform was created to make booking padel courts easier and faster —
+        no need to visit the club or contact staff. Just sign up, log in, and book your court in seconds.
+      </p>
+    </div>
+    <div class="footer-social">
+      <a href="#"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://www.instagram.com/mal3bk.eg/#"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@mal3bk"><i class="fab fa-tiktok"></i></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Mal3bk. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  <!-- Firebase + JS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script type="module">
     AOS.init({ duration: 1000, once: false });
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyChXYUhXG3GliFPb5vp736Hhp7Msllxj68",
@@ -191,7 +590,6 @@
     const settingsBtn = document.getElementById("settingsBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const loginBtn = document.getElementById("loginBtn");
-    const bookNowBtn = document.getElementById("bookNowBtn");
 
     accountIcon.addEventListener("click", () => {
       dropdownMenu.classList.toggle("active");
@@ -202,6 +600,9 @@
         dropdownMenu.classList.remove("active");
       }
     });
+
+    let bookingsData = [];
+    let currentFilter = "all";
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -220,6 +621,9 @@
           settingsBtn.disabled = false;
           logoutBtn.style.display = "block";
           loginBtn.style.display = "none";
+
+          await loadBookings(user.email);
+
         } catch (err) {
           console.error(err);
           userName.textContent = "User";
@@ -250,14 +654,47 @@
       window.location.href = "index12.html";
     });
 
-    bookNowBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (auth.currentUser) {
-        window.location.href = "index3.html";
+    async function loadBookings(email) {
+      const q = query(collection(db, "bookings"), where("email", "==", email));
+      const snap = await getDocs(q);
+      bookingsData = [];
+      snap.forEach(doc => bookingsData.push(doc.data()));
+      renderBookings();
+    }
+
+    function renderBookings() {
+      const list = document.getElementById("bookingsList");
+      if (!list) return; 
+      list.innerHTML = "";
+      const filtered = bookingsData.filter(b => {
+        if (currentFilter === "active") return !b.expired;
+        if (currentFilter === "expired") return b.expired;
+        return true;
+      });
+      if (!filtered.length) {
+        list.innerHTML = `<tr><td colspan="4" style="text-align:center">No bookings found</td></tr>`;
       } else {
-        window.location.href = "index12.html";
+        filtered.forEach(b => {
+          const statusClass = b.expired ? "expired" : "active";
+          const statusText = b.expired ? "Expired" : "Active";
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${b.name || "Booking"}</td>
+            <td>${b.date || ""}</td>
+            <td>${b.from || ""} - ${b.to || ""} ${b.am_pm || ""}</td>
+            <td class="status ${statusClass}">${statusText}</td>
+          `;
+          list.appendChild(row);
+        });
       }
-    });
+    }
+
+    window.setFilter = (f, btn) => {
+      currentFilter = f;
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderBookings();
+    };
   </script>
 </body>
 </html>
