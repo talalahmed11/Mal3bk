@@ -293,7 +293,7 @@
         <table>
           <thead>
             <tr>
-              <th>Match</th>
+              <th>Code</th>
               <th>Date</th>
               <th>Time</th>
               <th>Status</th>
@@ -447,7 +447,7 @@
           const c = d.expired ? "expired" : "active";
           const t = d.expired ? "Expired" : "Active";
           const row = document.createElement("tr");
-          row.innerHTML = `<td>${d.name || "Booking"}</td><td>${d.date}</td><td>${d.from} - ${d.to} ${d.am_pm}</td><td class="status ${c}">${t}</td>`;
+          row.innerHTML = `<td>${d.code || "Booking"}</td><td>${d.date}</td><td>${d.from} - ${d.to} ${d.am_pm}</td><td class="status ${c}">${t}</td>`;
           list.appendChild(row);
         });
       }

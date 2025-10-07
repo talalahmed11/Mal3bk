@@ -435,6 +435,7 @@
     </div>
   </section>
 
+
 <!-- Bookings Section -->
 <div class="bookings-section">
   <h2>📅 Your Bookings</h2>
@@ -448,7 +449,7 @@
     <table>
       <thead>
         <tr>
-          <th>Match</th>
+          <th>Code</th>
           <th>Date</th>
           <th>Time</th>
           <th>Status</th>
@@ -458,7 +459,6 @@
     </table>
   </div>
 </div>
-
 
 
 
@@ -659,8 +659,36 @@
       const snap = await getDocs(q);
       bookingsData = [];
       snap.forEach(doc => bookingsData.push(doc.data()));
+
+      bookingsData.sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        return dateB - dateA; 
+      });
+
       renderBookings();
     }
+
+    function parseDate(dateStr) {
+      if (!dateStr) return new Date(0);
+
+      let parts = dateStr.split(/[\/\-]/).map(p => p.trim());
+      
+      if (parts.length === 1) {
+
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), parseInt(parts[0]));
+      } else if (parts.length === 2) {
+
+        const now = new Date();
+        return new Date(now.getFullYear(), parseInt(parts[1]) - 1, parseInt(parts[0]));
+      } else if (parts.length === 3) {
+
+        return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+      }
+      return new Date(0);
+    }
+    
 
     function renderBookings() {
       const list = document.getElementById("bookingsList");
@@ -679,7 +707,7 @@
           const statusText = b.expired ? "Expired" : "Active";
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${b.name || "Booking"}</td>
+            <td>${b.code || "Booking"}</td>
             <td>${b.date || ""}</td>
             <td>${b.from || ""} - ${b.to || ""} ${b.am_pm || ""}</td>
             <td class="status ${statusClass}">${statusText}</td>

@@ -148,6 +148,21 @@
         return;
       }
 
+      let hour = parseInt(bookingData.from);
+      if (bookingData.am_pm === "PM" && hour !== 12) hour += 12;
+      if (bookingData.am_pm === "AM" && hour === 12) hour = 0;
+
+      const bookingTime = new Date(`${bookingData.date}T${hour.toString().padStart(2, '0')}:00:00`);
+      const now = new Date();
+
+      const diffHours = (bookingTime - now) / (1000 * 60 * 60);
+
+      if (diffHours <= 4) {
+        messageEl.textContent = "❌ You cannot cancel a booking less than 4 hours before it starts.";
+        messageEl.style.color = "red";
+        return;
+      }
+
       const bookingRef = doc(db, "bookings", docId);
       await updateDoc(bookingRef, {
         expired: true
